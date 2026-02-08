@@ -17,6 +17,7 @@ import (
 
 	"github.com/google/shlex"
 	"golang.org/x/tools/imports"
+
 	"lesiw.io/defers"
 )
 
@@ -183,7 +184,7 @@ rerun:
 		}
 		// This is a compile error, so try to fix it.
 		var fixed bool
-		for _, line := range strings.Split(output, "\n") {
+		for line := range strings.SplitSeq(output, "\n") {
 			if m := builderr.FindStringSubmatch(line); m != nil {
 				if strings.HasPrefix(m[4], unused) {
 					fixed = true
