@@ -21,11 +21,15 @@ import (
 	"lesiw.io/defers"
 )
 
-var builderr = regexp.MustCompile(`^(\./[^\s:]+):(\d+):(\d+):\s*(.+)$`)
-var errEOF = errors.New("bad EOF")
+var (
+	builderr = regexp.MustCompile(`^(\./[^\s:]+):(\d+):(\d+):\s*(.+)$`)
+	errEOF   = errors.New("bad EOF")
+)
 
-const unused = "declared and not used: "
-const foundEOF = "found 'EOF'"
+const (
+	unused   = "declared and not used: "
+	foundEOF = "found 'EOF'"
+)
 
 type session struct {
 	dir string       // Working directory.
@@ -46,8 +50,10 @@ func main() {
 }
 
 func run() error {
-	var s session
-	var err error
+	var (
+		s   session
+		err error
+	)
 	if len(os.Args) < 2 {
 		dir, err := os.MkdirTemp("", "igo")
 		if err != nil {
@@ -231,8 +237,10 @@ func (s *session) write(input string) (err error) {
 }
 
 func (s *session) newLines(output string) string {
-	start := len(output)
-	var count int
+	var (
+		start = len(output)
+		count int
+	)
 	for i, r := range output {
 		if count >= s.frm {
 			start = i
