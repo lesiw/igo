@@ -58,7 +58,8 @@ func run() error {
 		cmd.Dir = dir
 		if out, err := cmd.CombinedOutput(); err != nil {
 			return fmt.Errorf(`failed to run "go mod init": %s`,
-				bytes.TrimSpace(out))
+				bytes.TrimSpace(out),
+			)
 		}
 		s.pth = filepath.Join(dir, "main.go")
 		s.src = []byte("package main\n\nfunc main() {}\n")
@@ -82,7 +83,8 @@ func run() error {
 func (s *session) prepareSrc() error {
 	fs := token.NewFileSet()
 	root, err := parser.ParseFile(fs, filepath.Base(s.pth), s.src,
-		parser.AllErrors)
+		parser.AllErrors,
+	)
 	if err != nil {
 		return fmt.Errorf("failed to parse: %d", err)
 	}
@@ -139,7 +141,8 @@ func (s *session) run() error {
 				fmt.Fprintf(os.Stderr, "command failed: ")
 				if ee := new(exec.ExitError); errors.As(err, &ee) {
 					fmt.Fprintf(os.Stderr, "%s\n",
-						bytes.TrimSuffix(out, []byte("\n")))
+						bytes.TrimSuffix(out, []byte("\n")),
+					)
 				} else {
 					fmt.Fprintf(os.Stderr, "%s\n", err)
 				}
