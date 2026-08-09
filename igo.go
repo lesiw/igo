@@ -23,7 +23,7 @@ import (
 
 var (
 	builderr = regexp.MustCompile(`^(\./[^\s:]+):(\d+):(\d+):\s*(.+)$`)
-	errEOF   = errors.New("bad EOF")
+	errEOF   = fmt.Errorf("bad EOF")
 )
 
 const (
@@ -189,7 +189,9 @@ rerun:
 		lines := strings.Split(strings.TrimSuffix(output, "\n"), "\n")
 		if strings.HasPrefix(lines[len(lines)-1], "exit status ") {
 			// The program errored, so return its error.
-			return errors.New(strings.TrimSuffix(s.newLines(output), "\n"))
+			return fmt.Errorf(
+				"%s", strings.TrimSuffix(s.newLines(output), "\n"),
+			)
 		}
 		// This is a compile error, so try to fix it.
 		var fixed bool
@@ -204,7 +206,7 @@ rerun:
 		if fixed {
 			goto rerun
 		}
-		return errors.New(strings.TrimSuffix(output, "\n"))
+		return fmt.Errorf("%s", strings.TrimSuffix(output, "\n"))
 	}
 	s.usr.WriteString(input)
 	out := strings.TrimSuffix(s.newLines(output), "\n")
